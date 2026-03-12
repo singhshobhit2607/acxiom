@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Library Management System</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffe4e4;
+  margin: 20px;
+}
+
+h2 {
+  color: #333333;
+}
+
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #cccccc;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width: 250px;
+  padding: 5px;
+  margin: 4px 0;
+  border: 1px solid #999;
+}
+
+button {
+  padding: 6px 14px;
+  margin: 4px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+}
+
+.success {
+  color: green;
+  font-size: 13px;
+}
+
+.hide {
+  display: none;
+}
+
+.navbar {
+  background-color: #333;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.navbar button {
+  background-color: #555;
+  color: white;
+  margin-right: 5px;
+}
+
+.navbar button:hover {
+  background-color: #777;
+}
+
+.box {
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  width: 500px;
+}
+
+.loginBox {
+  width: 350px;
+  margin: 100px auto;
+  background: white;
+  padding: 30px;
+  border: 1px solid #aaa;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+  <div class="loginBox">
+    <h2>Library Management System</h2>
+    <p>Axis Colleges, Kanpur</p>
+    <br>
+
+    <b>Login As:</b><br>
+    <input type="radio" name="loginRole" value="admin" checked> Admin &nbsp;
+    <input type="radio" name="loginRole" value="user"> User
+    <br><br>
+
+    <label>User ID:</label><br>
+    <input type="text" id="loginUser" placeholder="Enter User ID"><br>
+
+    <label>Password:</label><br>
+    <input type="password" id="loginPass" placeholder="Enter Password"><br><br>
+
+    <button onclick="doLogin()">Login</button>
+    <br>
+    <span id="loginError" class="error hide">Wrong User ID or Password!</span>
+    <br>
+    <small>Admin: adm / adm &nbsp; | &nbsp; User: user / user</small>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="hide">
+
+  <div class="navbar">
+    <b style="color:white">Library System</b> &nbsp;&nbsp;
+    <button onclick="showPage('homePage')">Home</button>
+    <button onclick="showPage('transPage')">Transactions</button>
+    <button onclick="showPage('reportsPage')">Reports</button>
+    <button id="maintBtn" onclick="showPage('maintPage')">Maintenance</button>
+    &nbsp;&nbsp;&nbsp;
+    <button onclick="doLogout()" style="background-color:#c0392b; float:right">Logout</button>
+    <span id="userLabel" style="color:white; float:right; margin-right:10px"></span>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div id="homePage" class="hide">
+    <h2 id="homeHeading">Home Page</h2>
+
+    <table style="width:400px">
+      <tr><th>Total Books</th><td>52</td></tr>
+      <tr><th>Available</th><td>38</td></tr>
+      <tr><th>Issued</th><td>11</td></tr>
+      <tr><th>Overdue</th><td>3</td></tr>
+    </table>
+
+    <br>
+    <h3>Book Category Codes</h3>
+    <table style="width:500px">
+      <tr>
+        <th>Code From</th>
+        <th>Code To</th>
+        <th>Category</th>
+      </tr>
+      <tr><td>SC(B/M)000001</td><td>SC(B/M)000004</td><td>Science</td></tr>
+      <tr><td>EC(B/M)000001</td><td>EC(B/M)000004</td><td>Economics</td></tr>
+      <tr><td>FC(B/M)000001</td><td>FC(B/M)000004</td><td>Fiction</td></tr>
+      <tr><td>CH(B/M)000001</td><td>CH(B/M)000004</td><td>Children</td></tr>
+      <tr><td>PD(B/M)000001</td><td>PD(B/M)000004</td><td>Personal Development</td></tr>
+    </table>
+  </div>
+
+  <!-- TRANSACTIONS PAGE -->
+  <div id="transPage" class="hide">
+    <h2>Transactions</h2>
+    <button onclick="showPage('bookAvailPage')">Is Book Available?</button>
+    <button onclick="showPage('issueBookPage')">Issue Book</button>
+    <button onclick="showPage('returnBookPage')">Return Book</button>
+    <button onclick="showPage('payFinePage')">Pay Fine</button>
+  </div>
+
+  <!-- BOOK AVAILABLE PAGE -->
+  <div id="bookAvailPage" class="hide">
+    <h2>Book Availability</h2>
+    <p>Fill at least one field before searching.</p>
+
+    <div class="box">
+      <label>Enter Book Name:</label><br>
+      <input type="text" id="srchName" placeholder="Book name"><br>
+
+      <label>Select Category:</label><br>
+      <select id="srchCat">
+        <option value="">-- Select --</option>
+        <option>Science</option>
+        <option>Economics</option>
+        <option>Fiction</option>
+        <option>Children</option>
+        <option>Personal Development</option>
+      </select><br>
+
+      <label>Enter Author:</label><br>
+      <input type="text" id="srchAuthor" placeholder="Author name"><br><br>
+
+      <button onclick="searchBooks()">Search</button>
+      <button onclick="clearSearch()" style="background-color:#888">Clear</button>
+      <button onclick="showPage('transPage')" style="background-color:#888">Back</button>
+      <br>
+      <span id="srchError" class="error hide">Please fill at least one field.</span>
+    </div>
+
+    <div id="srchResultBox" class="hide">
+      <h3>Search Results</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Serial No</th>
+            <th>Category</th>
+            <th>Available</th>
+            <th>Select</th>
+          </tr>
+        </thead>
+        <tbody id="srchTableBody"></tbody>
+      </table>
+      <br>
+      <span id="srchSelectError" class="error hide">Please select a book first.</span><br>
+      <button onclick="goToIssue()">Issue Selected Book</button>
+    </div>
+  </div>
+
+  <!-- ISSUE BOOK PAGE -->
+  <div id="issueBookPage" class="hide">
+    <h2>Book Issue</h2>
+
+    <div class="box">
+      <label>Book Name: *</label><br>
+      <select id="issueBookName" onchange="fillIssueAuthor()">
+        <option value="">-- Select Book --</option>
+        <option>Data Structures</option>
+        <option>Microeconomics</option>
+        <option>Harry Potter</option>
+        <option>The Alchemist</option>
+        <option>Wings of Fire</option>
+      </select><br>
+
+      <label>Author Name:</label><br>
+      <input type="text" id="issueAuthor" readonly placeholder="Auto filled"><br>
+
+      <label>Member Name: *</label><br>
+      <input type="text" id="issueMember" placeholder="Enter member name"><br>
+
+      <label>Membership ID: *</label><br>
+      <input type="text" id="issueMembID" placeholder="Enter membership ID"><br>
+
+      <label>Issue Date: *</label><br>
+      <input type="date" id="issueDate" onchange="setReturnDate()"><br>
+
+      <label>Return Date: (max 15 days)</label><br>
+      <input type="date" id="issueReturn" onchange="checkReturnDate()"><br>
+
+      <label>Remarks:</label><br>
+      <textarea id="issueRemarks" placeholder="Optional"></textarea><br><br>
+
+      <button onclick="submitIssue()">Submit</button>
+      <button onclick="clearIssueForm()" style="background-color:#888">Clear</button>
+      <button onclick="showPage('transPage')" style="background-color:#888">Back</button>
+      <br>
+      <span id="issueError" class="error hide"></span>
+      <span id="issueSuccess" class="success hide"></span>
+    </div>
+  </div>
+
+  <!-- RETURN BOOK PAGE -->
+  <div id="returnBookPage" class="hide">
+    <h2>Return Book</h2>
+
+    <div class="box">
+      <label>Book Name: *</label><br>
+      <select id="retBookName" onchange="fillReturnAuthor()">
+        <option value="">-- Select Book --</option>
+        <option>Data Structures</option>
+        <option>Microeconomics</option>
+        <option>Harry Potter</option>
+        <option>The Alchemist</option>
+        <option>Wings of Fire</option>
+      </select><br>
+
+      <label>Author Name:</label><br>
+      <input type="text" id="retAuthor" readonly placeholder="Auto filled"><br>
+
+      <label>Serial No: *</label><br>
+      <input type="text" id="retSerial" placeholder="Enter serial number"><br>
+
+      <label>Member Name: *</label><br>
+      <input type="text" id="retMember" placeholder="Enter member name"><br>
+
+      <label>Issue Date:</label><br>
+      <input type="date" id="retIssueDate" readonly><br>
+
+      <label>Return Date:</label><br>
+      <input type="date" id="retReturnDate"><br>
+
+      <label>Remarks:</label><br>
+      <textarea id="retRemarks" placeholder="Optional"></textarea><br><br>
+
+      <button onclick="submitReturn()">Confirm Return</button>
+      <button onclick="clearReturnForm()" style="background-color:#888">Clear</button>
+      <button onclick="showPage('transPage')" style="background-color:#888">Back</button>
+      <br>
+      <span id="retError" class="error hide"></span>
+    </div>
+  </div>
+
+  <!-- PAY FINE PAGE -->
+  <div id="payFinePage" class="hide">
+    <h2>Pay Fine</h2>
+
+    <div class="box">
+      <label>Book Name:</label><br>
+      <input type="text" id="fineBook" readonly><br>
+
+      <label>Author:</label><br>
+      <input type="text" id="fineAuthor" readonly><br>
+
+      <label>Serial No:</label><br>
+      <input type="text" id="fineSerial" readonly><br>
+
+      <label>Issue Date:</label><br>
+      <input type="date" id="fineIssueDate" readonly><br>
+
+      <label>Return Date:</label><br>
+      <input type="date" id="fineReturnDate" readonly><br>
+
+      <label>Actual Return Date:</label><br>
+      <input type="date" id="fineActualDate" readonly><br>
+
+      <label>Fine Calculated (Rs.):</label><br>
+      <input type="text" id="fineAmount" readonly value="0"><br>
+
+      <label>Fine Paid:</label>
+      <input type="checkbox" id="finePaid"><br><br>
+
+      <label>Remarks:</label><br>
+      <textarea id="fineRemarks" placeholder="Optional"></textarea><br><br>
+
+      <button onclick="completeFine()">Confirm</button>
+      <button onclick="showPage('transPage')" style="background-color:#888">Back</button>
+      <br>
+      <span id="fineError" class="error hide"></span>
+      <span id="fineSuccess" class="success hide"></span>
+    </div>
+  </div>
+
+  <!-- REPORTS PAGE -->
+  <div id="reportsPage" class="hide">
+    <h2>Reports</h2>
+
+    <button onclick="showReport('rBooks')">Master List of Books</button>
+    <button onclick="showReport('rMovies')">Master List of Movies</button>
+    <button onclick="showReport('rMembers')">Master List of Memberships</button>
+    <button onclick="showReport('rActive')">Active Issues</button>
+    <button onclick="showReport('rOverdue')">Overdue Returns</button>
+    <button onclick="showReport('rRequests')">Pending Issue Requests</button>
+    <br><br>
+
+    <div id="rBooks" class="hide">
+      <h3>Master List of Books</h3>
+      <table>
+        <tr><th>Serial No</th><th>Book Name</th><th>Author</th><th>Category</th><th>Status</th><th>Cost</th><th>Procurement Date</th></tr>
+        <tr><td>SC(B)000001</td><td>Data Structures</td><td>Lipschutz</td><td>Science</td><td>Available</td><td>350</td><td>2023-06-01</td></tr>
+        <tr><td>EC(B)000001</td><td>Microeconomics</td><td>Pindyck</td><td>Economics</td><td>Issued</td><td>480</td><td>2023-07-15</td></tr>
+        <tr><td>FC(B)000001</td><td>Harry Potter</td><td>J.K. Rowling</td><td>Fiction</td><td>Overdue</td><td>299</td><td>2023-03-10</td></tr>
+        <tr><td>PD(B)000001</td><td>The Alchemist</td><td>Paulo Coelho</td><td>Personal Development</td><td>Available</td><td>199</td><td>2024-01-05</td></tr>
+        <tr><td>CH(B)000001</td><td>Wings of Fire</td><td>A.P.J. Abdul Kalam</td><td>Children</td><td>Available</td><td>220</td><td>2024-02-20</td></tr>
+      </table>
+    </div>
+
+    <div id="rMovies" class="hide">
+      <h3>Master List of Movies</h3>
+      <table>
+        <tr><th>Serial No</th><th>Movie Name</th><th>Director</th><th>Category</th><th>Status</th><th>Cost</th><th>Procurement Date</th></tr>
+        <tr><td>SC(M)000001</td><td>Interstellar</td><td>Christopher Nolan</td><td>Science</td><td>Available</td><td>150</td><td>2023-08-01</td></tr>
+        <tr><td>FC(M)000001</td><td>Inception</td><td>Christopher Nolan</td><td>Fiction</td><td>Issued</td><td>120</td><td>2023-09-12</td></tr>
+      </table>
+    </div>
+
+    <div id="rMembers" class="hide">
+      <h3>Master List of Memberships</h3>
+      <table>
+        <tr><th>Membership ID</th><th>Name</th><th>Contact</th><th>Address</th><th>Start Date</th><th>End Date</th><th>Status</th><th>Fine Pending</th></tr>
+        <tr><td>MEM001</td><td>Rahul Sharma</td><td>9800000001</td><td>Kanpur</td><td>2025-01-01</td><td>2025-07-01</td><td>Active</td><td>0</td></tr>
+        <tr><td>MEM002</td><td>Priya Singh</td><td>9800000002</td><td>Lucknow</td><td>2024-06-01</td><td>2025-06-01</td><td>Active</td><td>85</td></tr>
+        <tr><td>MEM003</td><td>Amit Verma</td><td>9800000003</td><td>Agra</td><td>2023-01-01</td><td>2024-01-01</td><td>Inactive</td><td>0</td></tr>
+      </table>
+    </div>
+
+    <div id="rActive" class="hide">
+      <h3>Active Issues</h3>
+      <table>
+        <tr><th>Serial No</th><th>Book/Movie Name</th><th>Membership ID</th><th>Issue Date</th><th>Return Date</th></tr>
+        <tr><td>EC(B)000001</td><td>Microeconomics</td><td>MEM001</td><td>2026-02-20</td><td>2026-03-07</td></tr>
+        <tr><td>FC(M)000001</td><td>Inception</td><td>MEM002</td><td>2026-02-25</td><td>2026-03-12</td></tr>
+      </table>
+    </div>
+
+    <div id="rOverdue" class="hide">
+      <h3>Overdue Returns</h3>
+      <table>
+        <tr><th>Serial No</th><th>Book Name</th><th>Membership ID</th><th>Issue Date</th><th>Due Date</th><th>Fine (Rs.)</th></tr>
+        <tr><td>FC(B)000001</td><td>Harry Potter</td><td>MEM003</td><td>2026-01-10</td><td>2026-01-25</td><td>85</td></tr>
+      </table>
+    </div>
+
+    <div id="rRequests" class="hide">
+      <h3>Pending Issue Requests</h3>
+      <table>
+        <tr><th>Membership ID</th><th>Book/Movie Name</th><th>Requested Date</th><th>Fulfilled Date</th></tr>
+        <tr><td>MEM001</td><td>Wings of Fire</td><td>2026-03-01</td><td>-</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- MAINTENANCE PAGE (Admin Only) -->
+  <div id="maintPage" class="hide">
+    <h2>Maintenance</h2>
+
+    <button onclick="showMaint('mAddMemb')">Add Membership</button>
+    <button onclick="showMaint('mUpdMemb')">Update Membership</button>
+    <button onclick="showMaint('mAddBook')">Add Book/Movie</button>
+    <button onclick="showMaint('mUpdBook')">Update Book/Movie</button>
+    <button onclick="showMaint('mUser')">User Management</button>
+    <br><br>
+
+    <!-- ADD MEMBERSHIP -->
+    <div id="mAddMemb" class="hide">
+      <h3>Add Membership</h3>
+      <div class="box">
+        <label>First Name: *</label><br>
+        <input type="text" id="maFName" placeholder="First name"><br>
+
+        <label>Last Name: *</label><br>
+        <input type="text" id="maLName" placeholder="Last name"><br>
+
+        <label>Contact Number: *</label><br>
+        <input type="text" id="maContact" placeholder="Phone number"><br>
+
+        <label>Address: *</label><br>
+        <input type="text" id="maAddr" placeholder="Address"><br>
+
+        <label>Aadhar Card No: *</label><br>
+        <input type="text" id="maAadhar" placeholder="Aadhar number"><br>
+
+        <label>Start Date: *</label><br>
+        <input type="date" id="maStart"><br>
+
+        <label>End Date: *</label><br>
+        <input type="date" id="maEnd"><br>
+
+        <label>Membership Duration: *</label><br>
+        <input type="radio" name="maDuration" value="6" checked> 6 Months &nbsp;
+        <input type="radio" name="maDuration" value="12"> 1 Year &nbsp;
+        <input type="radio" name="maDuration" value="24"> 2 Years
+        <br><br>
+
+        <button onclick="submitAddMember()">Add Member</button>
+        <button onclick="clearFields(['maFName','maLName','maContact','maAddr','maAadhar','maStart','maEnd'])" style="background-color:#888">Clear</button>
+        <br>
+        <span id="maError" class="error hide"></span>
+        <span id="maSuccess" class="success hide"></span>
+      </div>
+    </div>
+
+    <!-- UPDATE MEMBERSHIP -->
+    <div id="mUpdMemb" class="hide">
+      <h3>Update Membership</h3>
+      <div class="box">
+        <label>Membership Number: *</label><br>
+        <input type="text" id="muMemNo" placeholder="Enter membership ID" onblur="lookupMember()"><br>
+
+        <label>Start Date:</label><br>
+        <input type="date" id="muStart" readonly><br>
+
+        <label>End Date:</label><br>
+        <input type="date" id="muEnd" readonly><br>
+
+        <label>Extend Membership:</label><br>
+        <input type="radio" name="muExtend" value="6" checked> 6 Months &nbsp;
+        <input type="radio" name="muExtend" value="12"> 1 Year &nbsp;
+        <input type="radio" name="muExtend" value="24"> 2 Years &nbsp;
+        <input type="radio" name="muExtend" value="cancel"> Remove Membership
+        <br><br>
+
+        <button onclick="submitUpdMember()">Update</button>
+        <button onclick="clearFields(['muMemNo','muStart','muEnd'])" style="background-color:#888">Clear</button>
+        <br>
+        <span id="muError" class="error hide"></span>
+        <span id="muSuccess" class="success hide"></span>
+      </div>
+    </div>
+
+    <!-- ADD BOOK/MOVIE -->
+    <div id="mAddBook" class="hide">
+      <h3>Add Book / Movie</h3>
+      <div class="box">
+        <label>Type: *</label><br>
+        <input type="radio" name="baType" value="book" checked> Book &nbsp;
+        <input type="radio" name="baType" value="movie"> Movie
+        <br><br>
+
+        <label>Name: *</label><br>
+        <input type="text" id="baName" placeholder="Book or movie name"><br>
+
+        <label>Author / Director: *</label><br>
+        <input type="text" id="baAuthor" placeholder="Author or director"><br>
+
+        <label>Category: *</label><br>
+        <select id="baCat">
+          <option value="">-- Select --</option>
+          <option>Science</option>
+          <option>Economics</option>
+          <option>Fiction</option>
+          <option>Children</option>
+          <option>Personal Development</option>
+        </select><br>
+
+        <label>Date of Procurement: *</label><br>
+        <input type="date" id="baProcDate"><br>
+
+        <label>Quantity: *</label><br>
+        <input type="number" id="baQty" value="1" min="1"><br>
+
+        <label>Cost (Rs.): *</label><br>
+        <input type="number" id="baCost" placeholder="Cost"><br><br>
+
+        <button onclick="submitAddBook()">Add</button>
+        <button onclick="clearFields(['baName','baAuthor','baProcDate','baQty','baCost'])" style="background-color:#888">Clear</button>
+        <br>
+        <span id="baError" class="error hide"></span>
+        <span id="baSuccess" class="success hide"></span>
+      </div>
+    </div>
+
+    <!-- UPDATE BOOK/MOVIE -->
+    <div id="mUpdBook" class="hide">
+      <h3>Update Book / Movie</h3>
+      <div class="box">
+        <label>Type: *</label><br>
+        <input type="radio" name="buType" value="book" checked> Book &nbsp;
+        <input type="radio" name="buType" value="movie"> Movie
+        <br><br>
+
+        <label>Book/Movie Name: *</label><br>
+        <input type="text" id="buName" placeholder="Enter name"><br>
+
+        <label>Serial No: *</label><br>
+        <input type="text" id="buSerial" placeholder="Enter serial number"><br>
+
+        <label>Status: *</label><br>
+        <select id="buStatus">
+          <option value="">-- Select --</option>
+          <option>Available</option>
+          <option>Issued</option>
+          <option>Lost</option>
+          <option>Damaged</option>
+        </select><br>
+
+        <label>Date: *</label><br>
+        <input type="date" id="buDate"><br><br>
+
+        <button onclick="submitUpdBook()">Update</button>
+        <button onclick="clearFields(['buName','buSerial','buDate'])" style="background-color:#888">Clear</button>
+        <br>
+        <span id="buError" class="error hide"></span>
+        <span id="buSuccess" class="success hide"></span>
+      </div>
+    </div>
+
+    <!-- USER MANAGEMENT -->
+    <div id="mUser" class="hide">
+      <h3>User Management</h3>
+      <div class="box">
+        <label>User Type: *</label><br>
+        <input type="radio" name="umType" value="new" checked onclick="toggleUserFields(true)"> New User &nbsp;
+        <input type="radio" name="umType" value="existing" onclick="toggleUserFields(false)"> Existing User
+        <br><br>
+
+        <label>Name: *</label><br>
+        <input type="text" id="umName" placeholder="Full name"><br>
+
+        <div id="umUserDiv">
+          <label>Username: *</label><br>
+          <input type="text" id="umUsername" placeholder="Username"><br>
+
+          <label>Password: *</label><br>
+          <input type="password" id="umPassword" placeholder="Password"><br>
+        </div>
+
+        <label>Active:</label>
+        <input type="checkbox" id="umActive" checked><br>
+
+        <label>Admin:</label>
+        <input type="checkbox" id="umAdmin"><br><br>
+
+        <button onclick="submitUser()">Save</button>
+        <button onclick="clearFields(['umName','umUsername','umPassword'])" style="background-color:#888">Clear</button>
+        <br>
+        <span id="umError" class="error hide"></span>
+        <span id="umSuccess" class="success hide"></span>
+      </div>
+    </div>
+
+  </div><!-- end maintenance -->
+
+</div><!-- end mainApp -->
+
+<script>
+
+var currentRole = 'admin';
+var selectedBook = null;
+
+var books = {
+  'Data Structures': { author: 'Lipschutz', serial: 'SC(B)000001', cat: 'Science', available: true },
+  'Microeconomics':  { author: 'Pindyck', serial: 'EC(B)000001', cat: 'Economics', available: false },
+  'Harry Potter':    { author: 'J.K. Rowling', serial: 'FC(B)000001', cat: 'Fiction', available: false },
+  'The Alchemist':   { author: 'Paulo Coelho', serial: 'PD(B)000001', cat: 'Personal Development', available: true },
+  'Wings of Fire':   { author: 'A.P.J. Abdul Kalam', serial: 'CH(B)000001', cat: 'Children', available: true }
+};
+
+var members = {
+  'MEM001': { start: '2025-01-01', end: '2025-07-01' },
+  'MEM002': { start: '2024-06-01', end: '2025-06-01' }
+};
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getVal(id) {
+  return document.getElementById(id).value.trim();
+}
+
+function setVal(id, val) {
+  document.getElementById(id).value = val;
+}
+
+function showElem(id) {
+  document.getElementById(id).classList.remove('hide');
+}
+
+function hideElem(id) {
+  document.getElementById(id).classList.add('hide');
+}
+
+function showError(id, msg) {
+  document.getElementById(id).textContent = msg;
+  showElem(id);
+}
+
+function showSuccess(id, msg) {
+  document.getElementById(id).textContent = msg;
+  showElem(id);
+}
+
+function doLogin() {
+  var role = document.querySelector('input[name="loginRole"]:checked').value;
+  var user = getVal('loginUser');
+  var pass = document.getElementById('loginPass').value;
+
+  var valid = (role === 'admin' && user === 'adm' && pass === 'adm') ||
+              (role === 'user'  && user === 'user' && pass === 'user');
+
+  if (!valid) {
+    showElem('loginError');
+    return;
+  }
+
+  hideElem('loginError');
+  currentRole = role;
+
+  hideElem('loginPage');
+  showElem('mainApp');
+
+  document.getElementById('userLabel').textContent = 'Logged in as: ' + user;
+
+  if (role === 'admin') {
+    showElem('maintBtn');
+  } else {
+    hideElem('maintBtn');
+  }
+
+  showPage('homePage');
+  document.getElementById('homeHeading').textContent = role === 'admin' ? 'Admin Home Page' : 'User Home Page';
+}
+
+function doLogout() {
+  hideElem('mainApp');
+  showElem('loginPage');
+  setVal('loginUser', '');
+  setVal('loginPass', '');
+}
+
+function showPage(pageId) {
+  var pages = ['homePage','transPage','bookAvailPage','issueBookPage','returnBookPage','payFinePage','reportsPage','maintPage'];
+  for (var i = 0; i < pages.length; i++) {
+    hideElem(pages[i]);
+  }
+  showElem(pageId);
+}
+
+function searchBooks() {
+  var name   = getVal('srchName');
+  var cat    = getVal('srchCat');
+  var author = getVal('srchAuthor');
+
+  hideElem('srchError');
+
+  if (!name && !cat && !author) {
+    showElem('srchError');
+    return;
+  }
+
+  var results = [];
+  for (var title in books) {
+    var b = books[title];
+    var matchName   = !name   || title.toLowerCase().includes(name.toLowerCase());
+    var matchCat    = !cat    || b.cat === cat;
+    var matchAuthor = !author || b.author.toLowerCase().includes(author.toLowerCase());
+    if (matchName && matchCat && matchAuthor) {
+      results.push({ title: title, data: b });
+    }
+  }
+
+  var tbody = document.getElementById('srchTableBody');
+  tbody.innerHTML = '';
+  selectedBook = null;
+
+  for (var j = 0; j < results.length; j++) {
+    var r = results[j];
+    var row = '<tr>';
+    row += '<td>' + r.title + '</td>';
+    row += '<td>' + r.data.author + '</td>';
+    row += '<td>' + r.data.serial + '</td>';
+    row += '<td>' + r.data.cat + '</td>';
+    row += '<td>' + (r.data.available ? 'Yes' : 'No') + '</td>';
+    if (r.data.available) {
+      row += '<td><input type="radio" name="bookPick" onchange="selectedBook=\'' + r.title + '\'"></td>';
+    } else {
+      row += '<td>-</td>';
+    }
+    row += '</tr>';
+    tbody.innerHTML += row;
+  }
+
+  showElem('srchResultBox');
+}
+
+function clearSearch() {
+  setVal('srchName', '');
+  setVal('srchCat', '');
+  setVal('srchAuthor', '');
+  hideElem('srchError');
+  hideElem('srchResultBox');
+  selectedBook = null;
+}
+
+function goToIssue() {
+  hideElem('srchSelectError');
+  if (!selectedBook) {
+    showElem('srchSelectError');
+    return;
+  }
+  var b = books[selectedBook];
+  document.getElementById('issueBookName').value = selectedBook;
+  setVal('issueAuthor', b.author);
+  setVal('issueDate', today());
+  setReturnDate();
+  showPage('issueBookPage');
+}
+
+function fillIssueAuthor() {
+  var name = document.getElementById('issueBookName').value;
+  setVal('issueAuthor', books[name] ? books[name].author : '');
+}
+
+function setReturnDate() {
+  var issueDate = getVal('issueDate');
+  if (!issueDate) return;
+  var d = new Date(issueDate);
+  d.setDate(d.getDate() + 15);
+  setVal('issueReturn', d.toISOString().split('T')[0]);
+}
+
+function checkReturnDate() {
+  var issueDate = getVal('issueDate');
+  var returnDate = getVal('issueReturn');
+  if (!issueDate || !returnDate) return;
+  var maxDate = new Date(issueDate);
+  maxDate.setDate(maxDate.getDate() + 15);
+  if (new Date(returnDate) > maxDate) {
+    alert('Return date cannot be more than 15 days from issue date.');
+    setVal('issueReturn', maxDate.toISOString().split('T')[0]);
+  }
+}
+
+function submitIssue() {
+  hideElem('issueError');
+  hideElem('issueSuccess');
+
+  if (!document.getElementById('issueBookName').value) {
+    showError('issueError', 'Please select a book.');
+    return;
+  }
+  if (!getVal('issueMember')) {
+    showError('issueError', 'Member name is required.');
+    return;
+  }
+  if (!getVal('issueMembID')) {
+    showError('issueError', 'Membership ID is required.');
+    return;
+  }
+  if (!getVal('issueDate')) {
+    showError('issueError', 'Issue date is required.');
+    return;
+  }
+  if (getVal('issueDate') < today()) {
+    showError('issueError', 'Issue date cannot be before today.');
+    return;
+  }
+
+  showSuccess('issueSuccess', 'Book issued successfully!');
+}
+
+function clearIssueForm() {
+  document.getElementById('issueBookName').value = '';
+  var ids = ['issueAuthor','issueMember','issueMembID','issueDate','issueReturn','issueRemarks'];
+  for (var i = 0; i < ids.length; i++) {
+    setVal(ids[i], '');
+  }
+  hideElem('issueError');
+  hideElem('issueSuccess');
+}
+
+function fillReturnAuthor() {
+  var name = document.getElementById('retBookName').value;
+  if (name && books[name]) {
+    setVal('retAuthor', books[name].author);
+    var issueD = new Date();
+    issueD.setDate(issueD.getDate() - 20);
+    setVal('retIssueDate', issueD.toISOString().split('T')[0]);
+    var retD = new Date(issueD);
+    retD.setDate(retD.getDate() + 15);
+    setVal('retReturnDate', retD.toISOString().split('T')[0]);
+  }
+}
+
+function submitReturn() {
+  hideElem('retError');
+
+  if (!document.getElementById('retBookName').value) {
+    showError('retError', 'Please select a book.');
+    return;
+  }
+  if (!getVal('retSerial')) {
+    showError('retError', 'Serial number is required.');
+    return;
+  }
+  if (!getVal('retMember')) {
+    showError('retError', 'Member name is required.');
+    return;
+  }
+
+  var bookName   = document.getElementById('retBookName').value;
+  var b          = books[bookName] || {};
+  var dueDate    = new Date(getVal('retReturnDate') || today());
+  var actualDate = new Date(today());
+  var diffDays   = Math.max(0, Math.ceil((actualDate - dueDate) / 86400000));
+  var fine       = diffDays * 5;
+
+  setVal('fineBook',       bookName);
+  setVal('fineAuthor',     b.author || '');
+  setVal('fineSerial',     getVal('retSerial'));
+  setVal('fineIssueDate',  getVal('retIssueDate'));
+  setVal('fineReturnDate', getVal('retReturnDate'));
+  setVal('fineActualDate', today());
+  setVal('fineAmount',     fine);
+
+  document.getElementById('finePaid').checked = false;
+  hideElem('fineError');
+  hideElem('fineSuccess');
+
+  showPage('payFinePage');
+}
+
+function clearReturnForm() {
+  document.getElementById('retBookName').value = '';
+  var ids = ['retAuthor','retSerial','retMember','retIssueDate','retReturnDate','retRemarks'];
+  for (var i = 0; i < ids.length; i++) {
+    setVal(ids[i], '');
+  }
+  hideElem('retError');
+}
+
+function completeFine() {
+  hideElem('fineError');
+  hideElem('fineSuccess');
+
+  var fineAmt = parseInt(document.getElementById('fineAmount').value);
+  var finePaid = document.getElementById('finePaid').checked;
+
+  if (fineAmt > 0 && !finePaid) {
+    showError('fineError', 'Please mark fine as paid before completing return.');
+    return;
+  }
+
+  showSuccess('fineSuccess', 'Return completed successfully!');
+}
+
+function showReport(id) {
+  var all = ['rBooks','rMovies','rMembers','rActive','rOverdue','rRequests'];
+  for (var i = 0; i < all.length; i++) {
+    hideElem(all[i]);
+  }
+  showElem(id);
+}
+
+function showMaint(id) {
+  var all = ['mAddMemb','mUpdMemb','mAddBook','mUpdBook','mUser'];
+  for (var i = 0; i < all.length; i++) {
+    hideElem(all[i]);
+  }
+  showElem(id);
+}
+
+function lookupMember() {
+  var no = getVal('muMemNo');
+  if (members[no]) {
+    setVal('muStart', members[no].start);
+    setVal('muEnd',   members[no].end);
+  }
+}
+
+function submitAddMember() {
+  hideElem('maError');
+  hideElem('maSuccess');
+
+  var ids = ['maFName','maLName','maContact','maAddr','maAadhar','maStart','maEnd'];
+  for (var i = 0; i < ids.length; i++) {
+    if (!getVal(ids[i])) {
+      showError('maError', 'All fields are required.');
+      return;
+    }
+  }
+
+  showSuccess('maSuccess', 'Member added successfully!');
+}
+
+function submitUpdMember() {
+  hideElem('muError');
+  hideElem('muSuccess');
+
+  if (!getVal('muMemNo')) {
+    showError('muError', 'Membership number is required.');
+    return;
+  }
+
+  showSuccess('muSuccess', 'Membership updated successfully!');
+}
+
+function submitAddBook() {
+  hideElem('baError');
+  hideElem('baSuccess');
+
+  var ids = ['baName','baAuthor','baProcDate','baQty','baCost'];
+  for (var i = 0; i < ids.length; i++) {
+    if (!getVal(ids[i])) {
+      showError('baError', 'All fields are required.');
+      return;
+    }
+  }
+  if (!getVal('baCat')) {
+    showError('baError', 'Please select a category.');
+    return;
+  }
+
+  showSuccess('baSuccess', 'Book/Movie added successfully!');
+}
+
+function submitUpdBook() {
+  hideElem('buError');
+  hideElem('buSuccess');
+
+  var ids = ['buName','buSerial','buDate'];
+  for (var i = 0; i < ids.length; i++) {
+    if (!getVal(ids[i])) {
+      showError('buError', 'All fields are required.');
+      return;
+    }
+  }
+  if (!getVal('buStatus')) {
+    showError('buError', 'Please select a status.');
+    return;
+  }
+
+  showSuccess('buSuccess', 'Book/Movie updated successfully!');
+}
+
+function submitUser() {
+  hideElem('umError');
+  hideElem('umSuccess');
+
+  if (!getVal('umName')) {
+    showError('umError', 'Name is required.');
+    return;
+  }
+
+  showSuccess('umSuccess', 'User saved successfully!');
+}
+
+function toggleUserFields(show) {
+  if (show) {
+    showElem('umUserDiv');
+  } else {
+    hideElem('umUserDiv');
+  }
+}
+
+function clearFields(ids) {
+  for (var i = 0; i < ids.length; i++) {
+    setVal(ids[i], '');
+  }
+}
+
+window.onload = function() {
+  var issueDate = document.getElementById('issueDate');
+  if (issueDate) {
+    issueDate.min = today();
+    setVal('issueDate', today());
+    setReturnDate();
+  }
+};
+
+</script>
+</body>
+</html>
